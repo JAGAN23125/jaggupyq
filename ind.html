@@ -1,0 +1,1200 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>PYQs Hub — VIT AP</title>
+  <style>
+    :root{
+      --bg:#f6f7fb;
+      --card:#ffffff;
+      --text:#0f172a;
+      --muted:#64748b;
+      --accent:#0ea5a4;
+      --glass: rgba(255,255,255,0.6);
+    }
+
+    [data-theme="dark"]{
+      --bg:#020617;
+      --card:#020617;
+      --text:#e5e7eb;
+      --muted:#9ca3af;
+      --accent:#06b6d4;
+      --glass:rgba(15,23,42,0.85);
+    }
+
+    *{box-sizing:border-box;margin:0;padding:0}
+
+    body{
+      font-family:Inter,system-ui,Segoe UI,Roboto,"Helvetica Neue",Arial,sans-serif;
+      color:var(--text);
+      background:radial-gradient(circle at top,var(--bg),#ffffff);
+      min-height:100vh;
+    }
+
+    /* header */
+    header{
+      position:sticky;
+      top:0;
+      z-index:40;
+      display:flex;
+      align-items:center;
+      gap:12px;
+      padding:12px 18px;
+      background:var(--glass);
+      backdrop-filter:blur(10px);
+      border-bottom:1px solid rgba(15,23,42,0.06);
+    }
+
+    .brand{
+      display:flex;
+      gap:10px;
+      align-items:center;
+    }
+
+    .logo{
+      width:40px;
+      height:40px;
+      border-radius:12px;
+      background:conic-gradient(from 140deg,var(--accent),#22c55e,#3b82f6,#f97316,var(--accent));
+      display:grid;
+      place-items:center;
+      color:white;
+      font-weight:800;
+      font-size:15px;
+      box-shadow:0 8px 20px rgba(15,23,42,0.25);
+    }
+
+    .brand-text-title{
+      font-size:16px;
+      font-weight:800;
+      letter-spacing:0.03em;
+    }
+
+    .subtitle{
+      font-size:12px;
+      line-height:1.2;
+      font-weight:700;
+    }
+
+    .subtitle span{
+      text-shadow:0 1px 2px rgba(0,0,0,0.15);
+    }
+
+    .controls{
+      margin-left:auto;
+      display:flex;
+      align-items:center;
+      gap:10px;
+      font-size:13px;
+      color:var(--muted);
+    }
+
+    .btn,
+    .icon-btn{
+      border-radius:999px;
+      border:1px solid rgba(15,23,42,0.08);
+      background:rgba(255,255,255,0.9);
+      padding:8px 12px;
+      cursor:pointer;
+      font-weight:600;
+      font-size:13px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:6px;
+      transition:all .16s ease;
+    }
+
+    [data-theme="dark"] .btn,
+    [data-theme="dark"] .icon-btn{
+      background:rgba(15,23,42,0.8);
+      border-color:rgba(148,163,184,0.4);
+      color:var(--text);
+    }
+
+    .btn:hover,
+    .icon-btn:hover{
+      transform:translateY(-1px);
+      box-shadow:0 8px 20px rgba(15,23,42,0.12);
+    }
+
+    .icon-btn{
+      width:38px;
+      height:38px;
+      padding:0;
+      border-radius:12px;
+    }
+
+    .hamburger{
+      display:none;
+    }
+
+    /* layout */
+    .layout{
+      max-width:1200px;
+      margin:16px auto 24px;
+      padding:0 16px 24px;
+      display:grid;
+      grid-template-columns:260px minmax(0,1fr);
+      gap:18px;
+    }
+
+    /* sidebar */
+    .sidebar{
+      background:var(--card);
+      border-radius:16px;
+      padding:14px 14px 16px;
+      box-shadow:0 14px 45px rgba(15,23,42,0.12);
+      border:1px solid rgba(148,163,184,0.3);
+      position:relative;
+      overflow:hidden;
+    }
+
+    .sidebar::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:radial-gradient(circle at top,var(--accent)10%,transparent 60%);
+      opacity:0.08;
+      pointer-events:none;
+    }
+
+    .sidebar-header{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-bottom:10px;
+      position:relative;
+      z-index:1;
+    }
+
+    .chip-pill{
+      font-size:11px;
+      padding:4px 10px;
+      border-radius:999px;
+      border:1px solid rgba(148,163,184,0.5);
+      color:var(--muted);
+      background:rgba(255,255,255,0.7);
+    }
+
+    .nav{
+      display:flex;
+      flex-direction:column;
+      gap:6px;
+      margin:6px 0 10px;
+      position:relative;
+      z-index:1;
+    }
+
+    .nav-btn{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      padding:8px 10px;
+      border-radius:10px;
+      border:none;
+      background:transparent;
+      cursor:pointer;
+      font-size:13px;
+      color:var(--muted);
+      font-weight:500;
+      text-align:left;
+      transition:all .15s ease;
+    }
+
+    .nav-btn span.icon{
+      font-size:14px;
+    }
+
+    .nav-btn.active{
+      background:linear-gradient(120deg,var(--accent),#22c55e);
+      color:#f9fafb;
+      box-shadow:0 12px 25px rgba(34,197,94,0.35);
+    }
+
+    .nav-btn.active span.icon{
+      opacity:0.9;
+    }
+
+    .divider{
+      border:none;
+      border-top:1px solid rgba(148,163,184,0.35);
+      margin:10px 0;
+      position:relative;
+      z-index:1;
+    }
+
+    .muted{
+      color:var(--muted);
+      font-size:12px;
+      position:relative;
+      z-index:1;
+    }
+
+    .tips{
+      margin-top:6px;
+      padding-left:16px;
+      color:var(--muted);
+      font-size:12px;
+      position:relative;
+      z-index:1;
+    }
+
+    .tips li{
+      margin-bottom:4px;
+    }
+
+    /* main content */
+    .main{
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+    }
+
+    .searchbar{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      align-items:center;
+    }
+
+    .search-input{
+      flex:1;
+      min-width:220px;
+      padding:9px 12px;
+      border-radius:999px;
+      border:1px solid rgba(148,163,184,0.5);
+      background:var(--card);
+      font-size:13px;
+      outline:none;
+      transition:all .15s ease;
+    }
+
+    .search-input:focus{
+      border-color:var(--accent);
+      box-shadow:0 0 0 1px rgba(14,165,164,0.35);
+    }
+
+    .search-suffix{
+      font-size:11px;
+      color:var(--muted);
+      padding:4px 7px;
+      border-radius:999px;
+      background:rgba(148,163,184,0.12);
+      margin-left:4px;
+    }
+
+    .filters{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      font-size:12px;
+      margin-top:2px;
+    }
+
+    .filter-chip{
+      padding:6px 10px;
+      border-radius:999px;
+      border:1px dashed rgba(148,163,184,0.7);
+      cursor:pointer;
+      color:var(--muted);
+      background:rgba(255,255,255,0.7);
+      transition:all .15s ease;
+    }
+
+    .filter-chip.active{
+      border-style:solid;
+      border-color:var(--accent);
+      color:var(--accent);
+      background:rgba(45,212,191,0.08);
+    }
+
+    .subjects-header{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-top:4px;
+    }
+
+    .subjects-header h3{
+      font-size:16px;
+    }
+
+    .subject-count{
+      font-size:12px;
+      color:var(--muted);
+    }
+
+    /* subjects grid */
+    .subjects-grid{
+      margin-top:10px;
+      display:grid;
+      grid-template-columns:repeat(5,minmax(0,1fr));
+      gap:12px;
+    }
+
+    @media (max-width:1200px){
+      .subjects-grid{
+        grid-template-columns:repeat(4,minmax(0,1fr));
+      }
+    }
+
+    @media (max-width:900px){
+      .subjects-grid{
+        grid-template-columns:repeat(3,minmax(0,1fr));
+      }
+    }
+
+    @media (max-width:640px){
+      .subjects-grid{
+        grid-template-columns:repeat(2,minmax(0,1fr));
+      }
+    }
+
+    @media (max-width:420px){
+      .subjects-grid{
+        grid-template-columns:repeat(1,minmax(0,1fr));
+      }
+    }
+
+    .subject-card{
+      background:var(--card);
+      border-radius:14px;
+      padding:8px;
+      box-shadow:0 10px 30px rgba(15,23,42,0.12);
+      border:1px solid rgba(148,163,184,0.5);
+      overflow:hidden;
+      transition:transform .16s ease, box-shadow .16s ease, border-color .16s ease;
+    }
+
+    .subject-card a{
+      display:flex;
+      flex-direction:column;
+      text-decoration:none;
+      color:inherit;
+    }
+
+    .subject-thumb{
+      width:100%;
+      height:90px;
+      border-radius:10px;
+      overflow:hidden;
+      margin-bottom:6px;
+    }
+
+    .subject-thumb img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
+    }
+
+    .subject-code{
+      font-size:13px;
+      font-weight:700;
+      text-align:center;
+      margin-bottom:2px;
+      letter-spacing:0.03em;
+    }
+
+    .subject-tag{
+      font-size:11px;
+      text-align:center;
+      color:var(--muted);
+    }
+
+    .subject-card:hover{
+      transform:translateY(-3px) scale(1.01);
+      border-color:var(--accent);
+      box-shadow:0 16px 35px rgba(14,116,144,0.35);
+    }
+
+    /* footer */
+    footer{
+      max-width:1200px;
+      margin:0 auto 20px;
+      padding:14px 18px;
+      border-radius:16px;
+      background:var(--card);
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+      box-shadow:0 10px 30px rgba(15,23,42,0.12);
+      border:1px solid rgba(148,163,184,0.5);
+    }
+
+    .footer-title{
+      font-size:14px;
+      font-weight:700;
+    }
+
+    .socials{
+      display:flex;
+      gap:8px;
+    }
+
+    .social{
+      width:38px;
+      height:38px;
+      border-radius:12px;
+      border:1px solid rgba(148,163,184,0.5);
+      display:grid;
+      place-items:center;
+      text-decoration:none;
+      font-size:15px;
+      color:var(--muted);
+      background:rgba(255,255,255,0.8);
+      transition:all .15s ease;
+    }
+
+    .social:hover{
+      transform:translateY(-1px);
+      box-shadow:0 10px 30px rgba(15,23,42,0.25);
+      color:var(--accent);
+      border-color:var(--accent);
+    }
+
+    /* mobile sidebar */
+    .mobile-sidebar{
+      position:fixed;
+      inset:0 auto 0 0;
+      width:260px;
+      background:var(--card);
+      padding:18px 16px;
+      box-shadow:10px 0 30px rgba(15,23,42,0.4);
+      transform:translateX(-110%);
+      transition:transform .18s ease;
+      z-index:60;
+      border-right:1px solid rgba(148,163,184,0.5);
+    }
+
+    .mobile-sidebar.open{
+      transform:translateX(0);
+    }
+
+    .mobile-nav-title{
+      font-weight:700;
+      margin-bottom:10px;
+    }
+
+    .overlay{
+      position:fixed;
+      inset:0;
+      background:rgba(15,23,42,0.55);
+      opacity:0;
+      visibility:hidden;
+      transition:all .18s ease;
+      z-index:55;
+    }
+
+    .overlay.show{
+      opacity:1;
+      visibility:visible;
+    }
+
+    /* responsive adjustments */
+    @media (max-width:900px){
+      .layout{
+        grid-template-columns: minmax(0,1fr);
+      }
+
+      .sidebar{
+        display:none;
+      }
+
+      .hamburger{
+        display:inline-flex;
+      }
+    }
+
+    @media (max-width:600px){
+      header{
+        padding-inline:12px;
+      }
+      .controls .btn{
+        display:none;
+      }
+      footer{
+        margin-inline:12px;
+      }
+    }
+  </style>
+</head>
+<body data-theme="light">
+  <header>
+    <button class="hamburger icon-btn" id="hambBtn" aria-label="Open menu">≡</button>
+
+    <div class="brand">
+      <div class="logo">PY</div>
+      <div>
+        <div class="brand-text-title">
+          <span style="color:#f97316;">VIT AP</span> <span style="color:#0f172a;">PYQs Hub</span>
+        </div>
+        <div class="subtitle">
+          <span style="color:#ffffff;background:#0f172a;padding:1px 3px;border-radius:4px;">Pre</span>
+          <span style="color:#1d4ed8;">v</span>
+          <span style="color:#ffffff;background:#0f172a;padding:1px 3px;border-radius:4px;">ious</span>
+          <span style="color:#22c55e;margin-left:4px;">Question Papers</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="controls">
+      <span>Theme</span>
+      <button class="icon-btn" id="themeToggle" title="Toggle theme">☾</button>
+      <span>Profile</span>
+      <button class="icon-btn" title="Profile">👤</button>
+    </div>
+  </header>
+
+  <div class="layout">
+    <!-- Desktop sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <strong>Subjects</strong>
+        <div class="chip-pill">VIT AP · CSE & Others</div>
+      </div>
+
+      <div class="nav">
+        <button class="nav-btn active" data-filter="all">
+          <span class="icon">📚</span>
+          <span>All Subjects</span>
+        </button>
+        <button class="nav-btn" data-filter="cse">
+          <span class="icon">💻</span>
+          <span>CSE</span>
+        </button>
+        <button class="nav-btn" data-filter="ece">
+          <span class="icon">📡</span>
+          <span>ECE</span>
+        </button>
+        <button class="nav-btn" data-filter="mat">
+          <span class="icon">➗</span>
+          <span>Maths</span>
+        </button>
+        <button class="nav-btn" data-filter="lang">
+          <span class="icon">🌍</span>
+          <span>Languages</span>
+        </button>
+        <button class="nav-btn" data-filter="other">
+          <span class="icon">📘</span>
+          <span>Others</span>
+        </button>
+      </div>
+
+      <hr class="divider">
+
+      <div class="muted">Quick tips</div>
+      <ul class="tips">
+        <li>Search by code like <strong>CSE3003</strong></li>
+        <li>Use left menu to filter branches</li>
+        <li>Long-press on link to open in new tab</li>
+        <li>Use dark theme for night study</li>
+      </ul>
+    </aside>
+
+    <!-- Main content -->
+    <main class="main">
+      <div class="searchbar">
+        <div style="flex:1;display:flex;align-items:center;">
+          <input id="searchInput" class="search-input" placeholder="Search subject (e.g., CSE3003, MAT1001, ECE2002)" />
+          <span class="search-suffix">/ to focus</span>
+        </div>
+        <button class="btn" id="clearBtn">Clear</button>
+      </div>
+
+      <div class="filters">
+        <div class="filter-chip active" data-tag="all">All</div>
+        <div class="filter-chip" data-tag="theory">Theory</div>
+        <div class="filter-chip" data-tag="lab">Lab / Practical</div>
+      </div>
+
+      <section>
+        <div class="subjects-header">
+          <h3>Subjects</h3>
+          <div class="subject-count"><span id="countSubjects"></span> subjects</div>
+        </div>
+
+        <div class="subjects-grid" id="subjectsGrid">
+          <!-- CSE category -->
+          <div class="subject-card" data-code="CSE2008" data-branch="cse" data-tags="theory">
+            <a href="cse2008.html">
+              <div class="subject-thumb">
+                <img src="./assets/images/print-197346848.jpg" alt="CSE2008">
+              </div>
+              <div class="subject-code">CSE2008</div>
+              <div class="subject-tag">OS</div>
+            </a>
+          </div>
+
+          <div class="subject-card" data-code="CSE3003" data-branch="cse" data-tags="theory">
+            <a href="cse3003.html">
+              <div class="subject-thumb">
+                <img src="./assets/images/CN.jpg" alt="CSE3003 CN">
+              </div>
+              <div class="subject-code">CSE3003</div>
+              <div class="subject-tag">Computer Networks</div>
+            </a>
+          </div>
+
+          <div class="subject-card" data-code="CSE3004" data-branch="cse" data-tags="theory">
+            <a href="cse3004.html">
+              <div class="subject-thumb">
+                <img src="./assets/images/DAA.jpg" alt="CSE3004 DAA">
+              </div>
+              <div class="subject-code">CSE3004</div>
+              <div class="subject-tag">Algorithms</div>
+            </a>
+          </div>
+
+          <div class="subject-card" data-code="CSE3009" data-branch="cse" data-tags="theory">
+            <a href="cse3009.html">
+              <div class="subject-thumb">
+                <img src="./assets/images/nosql.png" alt="CSE3009 NoSQL">
+              </div>
+              <div class="subject-code">CSE3009</div>
+              <div class="subject-tag">NoSQL</div>
+            </a>
+          </div>
+
+          <div class="subject-card" data-code="CSE4006" data-branch="cse" data-tags="theory">
+            <a href="cse4006.html">
+              <div class="subject-thumb">
+                <img src="./assets/images/DL.png" alt="CSE4006 Deep Learning">
+              </div>
+              <div class="subject-code">CSE4006</div>
+              <div class="subject-tag">Deep Learning</div>
+            </a>
+          </div>
+
+          <div class="subject-card" data-code="CSE4012" data-branch="cse" data-tags="theory">
+            <a href="cse4012.html">
+              <div class="subject-thumb">
+                <img src="./assets/images/ui-and-ux.jpg" alt="CSE4012 UI/UX">
+              </div>
+              <div class="subject-code">CSE4012</div>
+              <div class="subject-tag">UI / UX</div>
+            </a>
+          </div>
+
+          <div class="subject-card" data-code="CSE4007" data-branch="cse" data-tags="theory">
+            <a href="cse4007.html">
+              <div class="subject-thumb">
+                <img src="./assets/images/DIP.jpg" alt="CSE4007 DIP">
+              </div>
+              <div class="subject-code">CSE4007</div>
+              <div class="subject-tag">Image Processing</div>
+            </a>
+          </div>
+
+          <div class="subject-card" data-code="CSE2007" data-branch="cse" data-tags="theory">
+            <a href="cse2007.html">
+              <div class="subject-thumb">
+                <img src="./assets/images/76b8b29651deb6ff1fb6047f59fb1e52.png" alt="CSE2007">
+              </div>
+              <div class="subject-code">CSE2007</div>
+              <div class="subject-tag">Theory</div>
+            </a>
+          </div>
+
+          <div class="subject-card" data-code="CSE2009" data-branch="cse" data-tags="theory">
+            <a href="cse2009.html">
+              <div class="subject-thumb">
+                <img src="./assets/images/1679975013425.jpeg" alt="CSE2009">
+              </div>
+              <div class="subject-code">CSE2009</div>
+              <div class="subject-tag">Theory</div>
+            </a>
+          </div>
+
+          <div class="subject-card" data-code="CSE1005" data-branch="cse" data-tags="theory">
+            <a href="cse1005.html">
+              <div class="subject-thumb">
+                <img src="./assets/images/compressed_00af52e3eff1659d1ef65fa74caf598e.webp" alt="CSE1005">
+              </div>
+              <div class="subject-code">CSE1005</div>
+              <div class="subject-tag">Theory</div>
+            </a>
+          </div>
+
+          <div class="subject-card" data-code="CSE3008" data-branch="cse" data-tags="theory">
+            <a href="cse3008.html">
+              <div class="subject-thumb">
+                <img src="./assets/images/cse3008.jpg" alt="CSE3008">
+              </div>
+              <div class="subject-code">CSE3008</div>
+              <div class="subject-tag">Theory</div>
+            </a>
+          </div>
+
+          <div class="subject-card" data-code="CSE1006" data-branch="cse" data-tags="theory">
+            <a href="cse1006.html">
+              <div class="subject-thumb">
+                <img src="./assets/images/DATAAN.webp" alt="CSE1006">
+              </div>
+              <div class="subject-code">CSE1006</div>
+              <div class="subject-tag">Data Analytics</div>
+            </a>
+          </div>
+
+          <div class="subject-card" data-code="CSE3006" data-branch="cse" data-tags="theory">
+            <a href="cse3006.html">
+              <div class="subject-thumb">
+                <img src="./assets/images/data-visualization-icon-simple-element-illustration-data-visualization-concept-symbol-design-from-analytics-research-collection-can-be-used-web-mobile_159242-12210.avif" alt="CSE3006">
+              </div>
+              <div class="subject-code">CSE3006</div>
+              <div class="subject-tag">Data Visualization</div>
+            </a>
+          </div>
+
+          <div class="subject-card" data-code="CSE1022" data-branch="cse" data-tags="lab">
+            <a href="cse1022.html">
+              <div class="subject-thumb">
+                <img src="./assets/images/cse1022.jpg" alt="CSE1022">
+              </div>
+              <div class="subject-code">CSE1022</div>
+              <div class="subject-tag">Lab / Practical</div>
+            </a>
+          </div>
+
+          <div class="subject-card" data-code="CSE2001" data-branch="cse" data-tags="theory">
+            <a href="cse2001.html">
+              <div class="subject-thumb">
+                <img src="./assets/images/DSA.jpg" alt="CSE2001">
+              </div>
+              <div class="subject-code">CSE2001</div>
+              <div class="subject-tag">DSA</div>
+            </a>
+          </div>
+
+          <div class="subject-card" data-code="CSE3002" data-branch="cse" data-tags="theory">
+            <a href="cse3002.html">
+              <div class="subject-thumb">
+                <img src="./assets/images/CSE3002.jpeg" alt="CSE3002">
+              </div>
+              <div class="subject-code">CSE3002</div>
+              <div class="subject-tag">Theory</div>
+            </a>
+          </div>
+
+          <div class="subject-card" data-code="CSE1007" data-branch="cse" data-tags="lab">
+            <a href="cse1007.html">
+              <div class="subject-thumb">
+                <img src="./assets/images/cse1007.jpg" alt="CSE1007">
+              </div>
+              <div class="subject-code">CSE1007</div>
+              <div class="subject-tag">Lab / Practical</div>
+            </a>
+          </div>
+
+          <div class="subject-card" data-code="CSE4001" data-branch="cse" data-tags="theory">
+            <a href="cse4001.html">
+              <div class="subject-thumb">
+                <img src="./assets/images/cse4001.jpg" alt="CSE4001">
+              </div>
+              <div class="subject-code">CSE4001</div>
+              <div class="subject-tag">Theory</div>
+            </a>
+          </div>
+
+          <div class="subject-card" data-code="CSE1021" data-branch="cse" data-tags="lab">
+            <a href="cse1021.html">
+              <div class="subject-thumb">
+                <img src="./assets/images/CSE1021.avif" alt="CSE1021">
+              </div>
+              <div class="subject-code">CSE1021</div>
+              <div class="subject-tag">Lab / Practical</div>
+            </a>
+          </div>
+
+          <!-- ECE -->
+          <div class="subject-card" data-code="ECE2002" data-branch="ece" data-tags="theory">
+            <a href="ece2002.html">
+              <div class="subject-thumb">
+                <img src="./assets/images/word-cloud-computer-architecture-GJ6XJT.jpg" alt="ECE2002">
+              </div>
+              <div class="subject-code">ECE2002</div>
+              <div class="subject-tag">Computer Architecture</div>
+            </a>
+          </div>
+
+          <div class="subject-card" data-code="ECE1010" data-branch="ece" data-tags="theory">
+            <a href="ECE1010.HTML">
+              <div class="subject-thumb">
+                <img src="./assets/images/prob.png" alt="ECE1010">
+              </div>
+              <div class="subject-code">ECE1010</div>
+              <div class="subject-tag">Probability</div>
+            </a>
+          </div>
+
+          <div class="subject-card" data-code="ECE2001" data-branch="ece" data-tags="theory">
+            <a href="ECE2001.html">
+              <div class="subject-thumb">
+                <img src="./assets/images/images (1).png" alt="ECE2001">
+              </div>
+              <div class="subject-code">ECE2001</div>
+              <div class="subject-tag">Theory</div>
+            </a>
+          </div>
+
+          <div class="subject-card" data-code="ECE2014" data-branch="ece" data-tags="theory">
+            <a href="ECE2014.html">
+              <div class="subject-thumb">
+                <img src="./assets/images/image.png" alt="ECE2014">
+              </div>
+              <div class="subject-code">ECE2014</div>
+              <div class="subject-tag">Theory</div>
+            </a>
+          </div>
+
+          <div class="subject-card" data-code="ECE2005" data-branch="ece" data-tags="theory">
+            <a href="ECE2005.html">
+              <div class="subject-thumb">
+                <img src="./assets/images/signal-System.jpg" alt="ECE2005">
+              </div>
+              <div class="subject-code">ECE2005</div>
+              <div class="subject-tag">Signals & Systems</div>
+            </a>
+          </div>
+
+          <!-- Languages (FRL) -->
+          <div class="subject-card" data-code="FRL1001" data-branch="lang" data-tags="theory">
+            <a href="frl1001.html">
+              <div class="subject-thumb">
+                <img src="./assets/images/france-flag-brush-logo-template_8163-124.avif" alt="FRL1001">
+              </div>
+              <div class="subject-code">FRL1001</div>
+              <div class="subject-tag">French</div>
+            </a>
+          </div>
+
+          <div class="subject-card" data-code="FRL1005" data-branch="lang" data-tags="theory">
+            <a href="FRL1005.html">
+              <div class="subject-thumb">
+                <img src="./assets/images/istockphoto-1096979810-612x612-1.jpg" alt="FRL1005">
+              </div>
+              <div class="subject-code">FRL1005</div>
+              <div class="subject-tag">French</div>
+            </a>
+          </div>
+
+          <div class="subject-card" data-code="FRL1004" data-branch="lang" data-tags="theory">
+            <a href="FRL1004.HTML">
+              <div class="subject-thumb">
+                <img src="./assets/images/Flag_of_Spain.svg.png" alt="FRL1004">
+              </div>
+              <div class="subject-code">FRL1004</div>
+              <div class="subject-tag">Spanish</div>
+            </a>
+          </div>
+
+          <div class="subject-card" data-code="FRL2002" data-branch="lang" data-tags="theory">
+            <a href="FRL2002.html">
+              <div class="subject-thumb">
+                <img src="./assets/images/sky-blue-windy-flag-54097-e1706012551800.jpg" alt="FRL2002">
+              </div>
+              <div class="subject-code">FRL2002</div>
+              <div class="subject-tag">French</div>
+            </a>
+          </div>
+
+          <div class="subject-card" data-code="FRL2004" data-branch="lang" data-tags="theory">
+            <a href="FRL2004.html">
+              <div class="subject-thumb">
+                <img src="./assets/images/images (3).jpeg" alt="FRL2004">
+              </div>
+              <div class="subject-code">FRL2004</div>
+              <div class="subject-tag">French</div>
+            </a>
+          </div>
+
+          <!-- Management -->
+          <div class="subject-card" data-code="MGT2006" data-branch="other" data-tags="theory">
+            <a href="MGT2006.html">
+              <div class="subject-thumb">
+                <img src="./assets/images/image.jpeg" alt="MGT2006">
+              </div>
+              <div class="subject-code">MGT2006</div>
+              <div class="subject-tag">Management</div>
+            </a>
+          </div>
+
+          <div class="subject-card" data-code="MGT1040" data-branch="other" data-tags="theory">
+            <a href="mgt1040.html">
+              <div class="subject-thumb">
+                <img src="./assets/images/MGT.jpg" alt="MGT1040">
+              </div>
+              <div class="subject-code">MGT1040</div>
+              <div class="subject-tag">Management</div>
+            </a>
+          </div>
+
+          <!-- Maths -->
+          <div class="subject-card" data-code="MAT1011" data-branch="mat" data-tags="theory">
+            <a href="mat1011.html">
+              <div class="subject-thumb">
+                <img src="./assets/images/images (2).jpeg" alt="MAT1011">
+              </div>
+              <div class="subject-code">MAT1011</div>
+              <div class="subject-tag">Maths</div>
+            </a>
+          </div>
+
+          <div class="subject-card" data-code="MAT1003" data-branch="mat" data-tags="theory">
+            <a href="mat1003.html">
+              <div class="subject-thumb">
+                <img src="./assets/images/DMS.jpg" alt="MAT1003">
+              </div>
+              <div class="subject-code">MAT1003</div>
+              <div class="subject-tag">Discrete Maths</div>
+            </a>
+          </div>
+
+          <div class="subject-card" data-code="MAT1001" data-branch="mat" data-tags="theory">
+            <a href="https://drive.google.com/drive/folders/1W5n_FJgd2S91ZJfZ72IYOmfNfFD32kQp">
+              <div class="subject-thumb">
+                <img src="./assets/images/MATHSC.webp" alt="MAT1001">
+              </div>
+              <div class="subject-code">MAT1001</div>
+              <div class="subject-tag">Google Drive</div>
+            </a>
+          </div>
+
+          <div class="subject-card" data-code="MAT1002" data-branch="mat" data-tags="theory">
+            <a href="https://drive.google.com/drive/folders/15nlktKIENvzKN-RaNMB_gC4fl1bGtOxX">
+              <div class="subject-thumb">
+                <img src="./assets/images/MATHSC.webp" alt="MAT1002">
+              </div>
+              <div class="subject-code">MAT1002</div>
+              <div class="subject-tag">Google Drive</div>
+            </a>
+          </div>
+
+          <!-- Other 1st year subjects -->
+          <div class="subject-card" data-code="CSE1012" data-branch="cse" data-tags="theory">
+            <a href="https://drive.google.com/drive/folders/1q_euP2BIoW7e1glult6-AU9brUgq7xCu">
+              <div class="subject-thumb">
+                <img src="./assets/images/images (2).png" alt="CSE1012">
+              </div>
+              <div class="subject-code">CSE1012</div>
+              <div class="subject-tag">Google Drive</div>
+            </a>
+          </div>
+
+          <div class="subject-card" data-code="CSE2005" data-branch="cse" data-tags="theory">
+            <a href="https://drive.google.com/drive/folders/1Z07UmivwAUMhVNbJjgflgBnPIxLCi3Az">
+              <div class="subject-thumb">
+                <img src="./assets/images/JAVA.png" alt="CSE2005">
+              </div>
+              <div class="subject-code">CSE2005</div>
+              <div class="subject-tag">Java</div>
+            </a>
+          </div>
+
+          <div class="subject-card" data-code="CHY1009" data-branch="other" data-tags="theory">
+            <a href="https://drive.google.com/drive/folders/1ykHwz_uLsGqo36G_HK1BwlBoiBmex4dg">
+              <div class="subject-thumb">
+                <img src="./assets/images/images (1).png" alt="CHY1009">
+              </div>
+              <div class="subject-code">CHY1009</div>
+              <div class="subject-tag">Chemistry</div>
+            </a>
+          </div>
+
+          <div class="subject-card" data-code="PHY1008" data-branch="other" data-tags="theory">
+            <a href="https://drive.google.com/drive/folders/1MgVGJKns-uESk9GwBnoW64j24PWX8163">
+              <div class="subject-thumb">
+                <img src="./assets/images/360_F_282195356_Qnba54RyXAWkuEU2BYgIrBNTWIO3pzL5.jpg" alt="PHY1008">
+              </div>
+              <div class="subject-code">PHY1008</div>
+              <div class="subject-tag">Physics</div>
+            </a>
+          </div>
+
+          <div class="subject-card" data-code="ECE1002" data-branch="ece" data-tags="theory">
+            <a href="https://drive.google.com/drive/folders/18dt056s1MRYaB6GQa8kA0NpHfmCSiAdp">
+              <div class="subject-thumb">
+                <img src="./assets/images/images (3).png" alt="ECE1002">
+              </div>
+              <div class="subject-code">ECE1002</div>
+              <div class="subject-tag">Google Drive</div>
+            </a>
+          </div>
+
+          <div class="subject-card" data-code="ENG1001" data-branch="other" data-tags="theory">
+            <a href="https://drive.google.com/drive/folders/1L3DrnlK2K1sZ_phdsFXGXuUCx4anluqW">
+              <div class="subject-thumb">
+                <img src="./assets/images/images (1).jpeg" alt="ENG1001">
+              </div>
+              <div class="subject-code">ENG1001</div>
+              <div class="subject-tag">English</div>
+            </a>
+          </div>
+
+          <div class="subject-card" data-code="ENG1002" data-branch="other" data-tags="theory">
+            <a href="https://drive.google.com/drive/folders/1xXFyJLNSk6FHDIr_N84udZeLpqOPkMem">
+              <div class="subject-thumb">
+                <img src="./assets/images/images (1).jpeg" alt="ENG1002">
+              </div>
+              <div class="subject-code">ENG1002</div>
+              <div class="subject-tag">English</div>
+            </a>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <footer>
+    <div>
+      <div class="footer-title">PYQs Hub · VIT AP</div>
+      <div class="muted">Built for quick exam revision & last-minute prep.</div>
+    </div>
+    <div class="socials">
+      <a class="social" title="YouTube" href="#">▶</a>
+      <a class="social" title="LinkedIn" href="#">in</a>
+      <a class="social" title="Instagram" href="#">◎</a>
+    </div>
+  </footer>
+
+  <!-- Mobile sidebar + overlay -->
+  <div class="mobile-sidebar" id="mobileSidebar">
+    <div class="mobile-nav-title">Menu</div>
+    <div class="muted" style="margin-bottom:8px;">Filter by Branch</div>
+    <div class="nav">
+      <button class="nav-btn active" data-filter="all">
+        <span class="icon">📚</span>
+        <span>All Subjects</span>
+      </button>
+      <button class="nav-btn" data-filter="cse">
+        <span class="icon">💻</span>
+        <span>CSE</span>
+      </button>
+      <button class="nav-btn" data-filter="ece">
+        <span class="icon">📡</span>
+        <span>ECE</span>
+      </button>
+      <button class="nav-btn" data-filter="mat">
+        <span class="icon">➗</span>
+        <span>Maths</span>
+      </button>
+      <button class="nav-btn" data-filter="lang">
+        <span class="icon">🌍</span>
+        <span>Languages</span>
+      </button>
+      <button class="nav-btn" data-filter="other">
+        <span class="icon">📘</span>
+        <span>Others</span>
+      </button>
+    </div>
+  </div>
+  <div class="overlay" id="overlay"></div>
+
+  <script>
+    const root = document.body;
+    const themeToggle = document.getElementById('themeToggle');
+    const savedTheme = localStorage.getItem('pyqs-theme') || 'light';
+    root.setAttribute('data-theme', savedTheme);
+    themeToggle.textContent = savedTheme === 'dark' ? '☼' : '☾';
+
+    themeToggle.addEventListener('click', () => {
+      const current = root.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+      root.setAttribute('data-theme', current);
+      localStorage.setItem('pyqs-theme', current);
+      themeToggle.textContent = current === 'dark' ? '☼' : '☾';
+    });
+
+    const searchInput = document.getElementById('searchInput');
+    const clearBtn = document.getElementById('clearBtn');
+    const subjectsGrid = document.getElementById('subjectsGrid');
+    const subjectCards = Array.from(subjectsGrid.querySelectorAll('.subject-card'));
+    const countSubjectsEl = document.getElementById('countSubjects');
+    const filterChips = document.querySelectorAll('.filter-chip');
+    const navButtons = document.querySelectorAll('.sidebar .nav-btn, .mobile-sidebar .nav-btn');
+
+    function updateCount() {
+      const visible = subjectCards.filter(card => !card.classList.contains('hidden')).length;
+      countSubjectsEl.textContent = visible.toString();
+    }
+
+    function applyFilters() {
+      const q = searchInput.value.trim().toLowerCase();
+      const activeChip = document.querySelector('.filter-chip.active');
+      const tagFilter = activeChip ? activeChip.dataset.tag : 'all';
+      const activeNav = document.querySelector('.sidebar .nav-btn.active, .mobile-sidebar .nav-btn.active');
+      const branchFilter = activeNav ? activeNav.dataset.filter : 'all';
+
+      subjectCards.forEach(card => {
+        const code = card.dataset.code.toLowerCase();
+        const branch = card.dataset.branch;
+        const tags = card.dataset.tags || '';
+
+        let show = true;
+
+        if (q && !code.includes(q)) show = false;
+        if (branchFilter !== 'all' && branch !== branchFilter) show = false;
+        if (tagFilter !== 'all' && !tags.split(',').includes(tagFilter)) show = false;
+
+        card.classList.toggle('hidden', !show);
+        card.style.display = show ? '' : 'none';
+      });
+
+      updateCount();
+    }
+
+    searchInput.addEventListener('input', applyFilters);
+    clearBtn.addEventListener('click', () => {
+      searchInput.value = '';
+      applyFilters();
+      searchInput.focus();
+    });
+
+    // keyboard shortcut: / focuses search
+    window.addEventListener('keydown', (e) => {
+      if (e.key === '/' && document.activeElement !== searchInput) {
+        e.preventDefault();
+        searchInput.focus();
+      }
+    });
+
+    filterChips.forEach(chip => {
+      chip.addEventListener('click', () => {
+        filterChips.forEach(c => c.classList.remove('active'));
+        chip.classList.add('active');
+        applyFilters();
+      });
+    });
+
+    navButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const filter = btn.dataset.filter;
+        // for both sidebars, sync active state
+        document.querySelectorAll('.sidebar .nav-btn, .mobile-sidebar .nav-btn').forEach(b => {
+          b.classList.toggle('active', b.dataset.filter === filter);
+        });
+        applyFilters();
+        toggleMobile(false);
+      });
+    });
+
+    // initial count
+    updateCount();
+
+    // mobile sidebar
+    const mobileSidebar = document.getElementById('mobileSidebar');
+    const overlay = document.getElementById('overlay');
+    const hambBtn = document.getElementById('hambBtn');
+
+    function toggleMobile(open) {
+      mobileSidebar.classList.toggle('open', open);
+      overlay.classList.toggle('show', open);
+    }
+
+    hambBtn.addEventListener('click', () => toggleMobile(true));
+    overlay.addEventListener('click', () => toggleMobile(false));
+  </script>
+</body>
+</html>

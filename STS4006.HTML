@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>STS4006 – STS Question Selection</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body {
+  margin: 0;
+  color: white;
+  font-family: Arial, sans-serif;
+
+  /* Background images stack downward */
+  background-image:
+    url("D:\MY_website\assets\images\Darling doodle.jpg"),
+    url("assets/images/Salaar - Prabhas.jpg"),
+    url("assets/images/DARLING.jpg");
+
+  background-repeat: no-repeat, no-repeat, no-repeat;
+
+  /* Each image appears as you scroll more */
+  background-position:
+    center top 200vh,   /* 3rd image shows if page is long */
+    center top 100vh,   /* 2nd image shows if page scrolls */
+    center top;         /* 1st image always shows */
+
+  background-size: contain;
+  background-color: black;
+}
+
+header, footer {
+  background: rgba(0,0,0,0.7);
+  padding: 15px;
+  text-align: center;
+}
+.container {
+  max-width: 900px;
+  margin: 20px auto;
+}
+.box {
+  background: rgba(0, 0, 0, 0.6);
+  padding: 20px;
+  border-radius: 10px;
+  margin-bottom: 25px;
+}
+
+h2 {
+  color: #ffcc00;
+}
+.question {
+  display: flex;
+  justify-content: space-between;
+  margin: 6px 0;
+}
+button {
+  margin-top: 15px;
+  padding: 10px 20px;
+  background: #ffcc00;
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+}
+button:disabled {
+  background: gray;
+  cursor: not-allowed;
+}
+.count {
+  color: #aaa;
+}
+.closed {
+  color: red;
+}
+.open {
+  color: lightgreen;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>STS4006 – STS Question Selection</h1>
+</header>
+
+<div class="container" id="app"></div>
+
+<footer>
+  © 2026 VIT-AP Engineering
+</footer>
+
+<script>
+const exams = {
+  "CAT1": {
+    name: "CAT-1",
+    status: "OPEN",
+    openDate: "Feb 2",
+    closeDate: "Feb 10",
+    syllabus: [
+      "Loop Detection","Sort the Bitonic DLL","Segregate Even & Odd Nodes",
+      "Merge Sort for DLL","Minimum Stack","Celebrity Problem",
+      "Tower of Hanoi","Stock Span","Priority Queue using DLL",
+      "Sort without Extra Space","Stack Permutations"
+    ]
+  },
+  "CAT2": {
+    name: "CAT-2",
+    status: "OPEN",
+    openDate: "Mar 23",
+    closeDate: "Mar 30",
+    syllabus: [
+      "Maximum Sliding Window","Recover the BST","Views of Tree",
+      "Vertical Order Traversal","Boundary Traversal","BFS, DFS",
+      "Dial’s Algorithm","Bellman–Ford Algorithm","Topological Sort",
+      "Heap Sort","Binomial Heap","K-ary Heap","Winner Tree"
+    ]
+  },
+  "FAT": {
+    name: "FAT",
+    status: "OPEN",
+    openDate: "May 4",
+    closeDate: "May 22",
+    syllabus: [
+      "Loop Detection","Sort the Bitonic DLL","Segregate Even & Odd Nodes",
+      "Merge Sort for DLL","Minimum Stack","Celebrity Problem",
+      "Tower of Hanoi","Stock Span","Priority Queue using DLL",
+      "Sort without Extra Space","Stack Permutations",
+      "Maximum Sliding Window","Recover the BST","Views of Tree",
+      "Vertical Order Traversal","Boundary Traversal","BFS, DFS",
+      "Dial’s Algorithm","Bellman–Ford Algorithm","Topological Sort",
+      "Heap Sort","Binomial Heap","K-ary Heap","Winner Tree",
+      "HashMap to TreeMap","Types of Sets","Distributing items problem",
+      "Fibonacci","LCS","LIS","Rod Cutting",
+      "Longest Palindromic Subsequence","Subset Sum","0/1 Knapsack"
+    ]
+  }
+};
+
+function getCount(exam, q) {
+  return localStorage.getItem(`count_${exam}_${q}`) || 0;
+}
+
+function incrementCount(exam, q) {
+  let key = `count_${exam}_${q}`;
+  localStorage.setItem(key, Number(getCount(exam, q)) + 1);
+}
+
+function hasSubmitted(exam) {
+  return localStorage.getItem(`submitted_${exam}`);
+}
+
+function render() {
+  const app = document.getElementById("app");
+  app.innerHTML = "";
+
+  Object.keys(exams).forEach(examKey => {
+    const exam = exams[examKey];
+    const box = document.createElement("div");
+    box.className = "box";
+
+    let html = `<h2>${exam.name} <span class="${exam.status === 'OPEN' ? 'open' : 'closed'}">(${exam.status})</span></h2>
+      <p class="count">Open from <b>${exam.openDate}</b> to <b>${exam.closeDate}</b></p>`;
+
+    if (exam.status !== "OPEN") {
+      html += `<p class="closed">Selection closed</p>`;
+      box.innerHTML = html;
+      app.appendChild(box);
+      return;
+    }
+
+    if (hasSubmitted(examKey)) {
+      html += `<p class="closed">You already submitted</p>`;
+      exam.syllabus.forEach(q => {
+        html += `<div class="question">
+          <span>${q}</span>
+          <span class="count">${getCount(examKey, q)} selected</span>
+        </div>`;
+      });
+      box.innerHTML = html;
+      app.appendChild(box);
+      return;
+    }
+
+    html += `<form id="form_${examKey}">`;
+    exam.syllabus.forEach(q => {
+      html += `<div class="question">
+        <label><input type="checkbox" name="${examKey}" value="${q}">${q}</label>
+        <span class="count">${getCount(examKey, q)} selected</span>
+      </div>`;
+    });
+    html += `<button type="submit">Submit (Select 2)</button></form>`;
+    box.innerHTML = html;
+    app.appendChild(box);
+
+    const form = document.getElementById(`form_${examKey}`);
+    form.addEventListener("change", () => {
+      const checked = form.querySelectorAll("input:checked");
+      if (checked.length > 2) {
+        checked[checked.length - 1].checked = false;
+        alert("You can select only 2 questions");
+      }
+    });
+
+    form.addEventListener("submit", e => {
+      e.preventDefault();
+      const selected = form.querySelectorAll("input:checked");
+      if (selected.length !== 2) {
+        alert("Please select exactly 2 questions");
+        return;
+      }
+      selected.forEach(i => incrementCount(examKey, i.value));
+      localStorage.setItem(`submitted_${examKey}`, "true");
+      render();
+    });
+  });
+}
+
+render();
+</script>
+
+</body>
+</html>

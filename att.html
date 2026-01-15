@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Advanced Attendance Calculator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-image: url("assets/images/naniii.jpg");
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .box {
+  background: rgba(0, 0, 0, 0.6);
+  padding: 20px;
+  border-radius: 10px;
+  margin-bottom: 25px;
+}
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: white; /* Make text visible */
+            font-family: Arial, sans-serif;
+            text-align: center;
+    }
+
+    input {
+      width: 100%;
+      padding: 8px;
+      margin: 8px 0;
+    }
+
+    input:disabled {
+      background: #e9ecef;
+    }
+
+    button {
+      width: 100%;
+      padding: 10px;
+      background: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .result {
+      margin-top: 15px;
+      font-weight: bold;
+      line-height: 1.6;
+    }
+
+    .ok { color: green; }
+    .warn { color: red; }
+    .info { color: #333; }
+  </style>
+</head>
+<body>
+
+<div class="box">
+  <h2>Attendance Calculator</h2>
+
+  <input type="number" id="total" min="0"
+         placeholder="Total classes happened"
+         oninput="validateInputs()">
+
+  <input type="number" id="present" min="0"
+         placeholder="Classes present"
+         oninput="validateInputs()">
+
+  <input type="number" id="notUpdated" min="0"
+         placeholder="Classes not updated (optional)">
+
+  <input type="number" id="skip" min="0"
+         placeholder="Classes you plan to skip (optional)">
+
+  <input type="number" id="remaining" min="0"
+         placeholder="Classes remaining before exam (optional)">
+
+  <button onclick="calculate()">Calculate</button>
+
+  <div class="result" id="output"></div>
+</div>
+
+<script>
+function validateInputs() {
+  let total = Number(document.getElementById("total").value);
+  let presentInput = document.getElementById("present");
+  let present = Number(presentInput.value);
+  let notUpdated = document.getElementById("notUpdated");
+
+  if (total > 0) {
+    presentInput.max = total;
+  }
+
+  if (present > total) {
+    presentInput.value = total;
+  }
+
+  if (total !== 0 && total === present) {
+    notUpdated.value = "";
+    notUpdated.disabled = true;
+  } else {
+    notUpdated.disabled = false;
+  }
+}
+
+function calculate() {
+  let total = Number(document.getElementById("total").value);
+  let present = Number(document.getElementById("present").value);
+  let notUpdated = Number(document.getElementById("notUpdated").value || 0);
+  let skip = Number(document.getElementById("skip").value || 0);
+  let remaining = Number(document.getElementById("remaining").value || 0);
+
+  if (total === 0) {
+    document.getElementById("output").innerHTML =
+      "<span class='warn'>Total classes must be greater than zero</span>";
+    return;
+  }
+
+  let result = "";
+
+  // Current Attendance
+  let currentPercent = (present / total) * 100;
+  result += "Current Attendance: " + currentPercent.toFixed(2) + "%<br>";
+
+  // After Skipping
+  let skipTotal = total + skip;
+  let skipPercent = (present / skipTotal) * 100;
+  result += "After Skipping Classes: " + skipPercent.toFixed(2) + "%<br>";
+
+  // Exam Scenario
+  let examTotal = skipTotal + remaining;
+  let examPresent = present + remaining;
+  let examPercent = (examPresent / examTotal) * 100;
+
+  result += "If You Attend All Remaining Classes: " +
+            examPercent.toFixed(2) + "%<br>";
+
+  // CORRECT 75% CALCULATION (FIXED)
+  let classesNeeded = Math.ceil(3 * examTotal - 4 * examPresent);
+
+  if (classesNeeded <= 0) {
+    result += "<span class='ok'>Eligible for Exam (≥ 75%)</span>";
+  } else {
+    result += "<span class='warn'>Not Eligible for Exam (&lt; 75%)</span><br>";
+    result += "<span class='info'>You need to attend <b>" +
+              classesNeeded +
+              "</b> more classes to reach 75% attendance</span>";
+  }
+
+  document.getElementById("output").innerHTML = result;
+}
+</script>
+
+</body>
+</html>
+
+
